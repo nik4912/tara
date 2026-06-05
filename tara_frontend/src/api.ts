@@ -1,14 +1,23 @@
+// In production (Vercel), VITE_API_URL points to the deployed Render backend.
+// In development, the Vite proxy rewrites /ask → http://localhost:3000, so we use '/ask'.
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
+
+const API_KEY = import.meta.env.VITE_API_KEY ?? 'tara-finance-2024';
+
 /**
- * Sends a question to the Tara backend via the Vite proxy → /ask.
+ * Sends a question to the Tara backend.
  * Returns the answer string.
  */
 export async function askTara(question: string): Promise<string> {
   let response: Response;
 
   try {
-    response = await fetch('/ask', {
+    response = await fetch(`${API_BASE}/ask`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
       body: JSON.stringify({ question }),
     });
   } catch {
