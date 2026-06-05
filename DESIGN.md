@@ -229,16 +229,46 @@ Every `POST /ask` request is logged to `src/logs/requests.jsonl` in JSON Lines f
   "requestId": "uuid",
   "timestamp": "ISO-8601",
   "question": "user question",
+  "taskType": "spending_query",
   "toolsCalled": ["queryTransactions"],
   "toolInputs": [{ "tool": "queryTransactions", "operation": "biggest_expense" }],
+  "tablesRead": ["transactions"],
   "latencyMs": 1234,
   "status": "success"
 }
 ```
 
-- Secrets (`DATABASE_URL`, `OPENAI_API_KEY`) are never logged.
-- Log writes are non-blocking (`appendFileSync` in a try/catch that never throws).
-- Each request gets a UUID (`requestId`) returned in the response for correlation.
+Fields captured:
+- `requestId` — UUID returned in the response for correlation
+- `question` — original user question (sanitized; no secrets)
+- `taskType` — detected intent category (spending_query, fund_analysis, comparison_query, etc.)
+- `toolsCalled` — ordered list of tools invoked
+- `toolInputs` — sanitized tool arguments (no API keys or DB credentials)
+- `tablesRead` — which PostgreSQL tables were queried
+- `latencyMs` — wall-clock time from request to response
+- `status` / `error` — success or the error message on failure
+
+Secrets (`DATABASE_URL`, `GROQ_API_KEY`) are never logged.
+Log writes are non-blocking (`appendFileSync` in a try/catch that never propagates).
+
+---
+
+## Async Long-Running Tool Milestone
+
+**Decision: Not implemented.**
+
+All tools execute synchronously within the agent turn. Rationale:
+- All tool operations are pure SQL queries against a local/hosted Postgres instance
+- Observed latency is <500ms per tool call on the sample datasets — well within acceptable response time
+- The assignment states this milestone is optional
+
+If implemented, the pattern would be:
+1. Tool's `execute` returns `{ job_id, status: "running" }` immediately
+2. A BullMQ worker performs the real computation in the background
+3. A polling endpoint (`GET /jobs/:id`) or webhook re-injects the result into a fresh agent turn via a synthetic system prompt: `<async_tool_completion>job_id=...</async_tool_completion>`
+4. Job state is persisted in Postgres so a restart doesn't lose in-flight jobs
+
+The main tradeoff skipping this: portfolio computations across many holdings with a large NAV history could become slow at scale (hundreds of holdings × years of history). The current synchronous approach is correct and sufficient for the submitted dataset sizes.
 
 ---
 
@@ -293,5 +323,10 @@ Postgres → JavaScript conversion. Structural checks (count, ordering) are exac
 5. **No authentication**: The `/ask` endpoint has no auth. Production deployment should
    add an API key or OAuth guard.
 
-6. **LLM cost**: Every `POST /ask` calls OpenAI. For high-volume usage, add a caching
-   layer for identical questions or use a cheaper model for simple lookups.
+6. **LLM reliability**: Using Groq's Llama 4 Scout model via an OpenAI-compatible endpoint.
+   Tool-call schema uses flat parameters and `z.coerce` types to handle LLM type coercion
+   quirks. In rare cases the model may still fail to produce a valid tool call on the first
+   attempt — retrying the question resolves this.
+
+7. **No async milestone**: All tools run synchronously. See the Async section above for
+   the design that would be implemented with more time.

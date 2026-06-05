@@ -1,15 +1,16 @@
 /**
- * Ingestion script – loads a snapshot folder into PostgreSQL.
+ * Ingestion script – loads one or all snapshot folders into PostgreSQL.
  *
  * Usage:
- *   DATA_DIR=./data/sample_a npx ts-node scripts/ingest.ts
- *   DATA_DIR=./data/sample_b npx ts-node scripts/ingest.ts
+ *   DATA_DIR=./data/sample_a npx ts-node scripts/ingest.ts   ← single dataset
+ *   DATA_DIR=all             npx ts-node scripts/ingest.ts   ← all 3 datasets
+ *                            npx ts-node scripts/ingest.ts   ← defaults to sample_a
  *
  * The script:
  *  1. Creates/migrates the schema if needed.
- *  2. Clears all existing data.
+ *  2. Clears all existing data (once, at the start).
  *  3. Parses funds.json (mixed format: fund defs + nav history arrays).
- *  4. Inserts funds, nav history, holdings, transactions.
+ *  4. Inserts funds, nav history, holdings, transactions (upsert — safe to repeat).
  */
 
 import * as fs from 'fs';
@@ -228,27 +229,17 @@ async function insertTransactions(transactions: RawTransaction[]): Promise<void>
 }
 
 // ---------------------------------------------------------------------------
-// Main
+// Load one snapshot directory
 // ---------------------------------------------------------------------------
 
-async function main(): Promise<void> {
-  const dataDir = process.env.DATA_DIR ?? './data/sample_a';
-  const resolvedDir = path.resolve(dataDir);
-
-  console.log(`\n[ingest] Loading snapshot from: ${resolvedDir}\n`);
+async function ingestDirectory(resolvedDir: string): Promise<void> {
+  console.log(`\n[ingest] Loading snapshot from: ${resolvedDir}`);
 
   if (!fs.existsSync(resolvedDir)) {
     console.error(`[ingest] ERROR: Directory not found: ${resolvedDir}`);
     process.exit(1);
   }
 
-  // Step 1 – ensure schema exists
-  await runMigrations();
-
-  // Step 2 – clear old data
-  await clearAllData();
-
-  // Step 3 – load and parse JSON files
   const fundsRaw = loadJson<RawFundsItem[]>(path.join(resolvedDir, 'funds.json'));
   const holdingsRaw = loadJson<RawHolding[]>(path.join(resolvedDir, 'holdings.json'));
   const transactionsRaw = loadJson<RawTransaction[]>(path.join(resolvedDir, 'transactions.json'));
@@ -256,16 +247,43 @@ async function main(): Promise<void> {
   const { fundDefs, navHistories } = parseFundsJson(fundsRaw);
   console.log(`[ingest] Parsed ${fundDefs.length} fund definitions, ${navHistories.length} nav history sets.`);
 
-  // Step 4 – insert in dependency order
   await insertFunds(fundDefs);
   await insertNavHistory(navHistories);
   await insertHoldings(holdingsRaw);
   await insertTransactions(transactionsRaw);
+}
 
-  // Step 5 – verify counts
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+async function main(): Promise<void> {
+  const dataDir = process.env.DATA_DIR ?? './data/sample_a';
+
+  // Step 1 – ensure schema exists
+  await runMigrations();
+
+  // Step 2 – clear existing data (once, regardless of how many datasets we load)
+  await clearAllData();
+
+  // Step 3 – resolve which directories to ingest
+  const loadAll = dataDir.trim().toLowerCase() === 'all';
+
+  if (loadAll) {
+    console.log('\n[ingest] Loading ALL datasets: sample_a, sample_b, sample_c\n');
+    const baseDir = path.resolve('./data');
+    const datasets = ['sample_a', 'sample_b', 'sample_c'];
+    for (const dataset of datasets) {
+      await ingestDirectory(path.join(baseDir, dataset));
+    }
+  } else {
+    await ingestDirectory(path.resolve(dataDir));
+  }
+
+  // Step 4 – verify combined counts
   const counts = await db.execute(sql`
     SELECT
-      (SELECT COUNT(*) FROM funds)           AS funds,
+      (SELECT COUNT(*) FROM funds)            AS funds,
       (SELECT COUNT(*) FROM fund_nav_history) AS nav_history,
       (SELECT COUNT(*) FROM holdings)         AS holdings,
       (SELECT COUNT(*) FROM transactions)     AS transactions

@@ -2,10 +2,10 @@
   "name": "tara-finance-agent",
   "version": "1.0.0",
   "description": "Tara - AI Finance Research Agent powered by Mastra SDK",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts",
     "ingest": "ts-node scripts/ingest.ts",
     "eval": "ts-node src/eval/run-evals.ts",
@@ -31,6 +31,7 @@
     "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.30.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "^5.8.3"
   },
   "engines": {

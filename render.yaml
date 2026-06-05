@@ -3,7 +3,7 @@ services:
     name: tara-finance-agent
     env: node
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
     envVars:
@@ -12,11 +12,11 @@ services:
       - key: PORT
         value: 3000
       - key: DATABASE_URL
-        sync: false          # Set manually in Render dashboard from Neon
-      - key: OPENAI_API_KEY
+        sync: false          # Set manually in Render dashboard (Neon connection string)
+      - key: GROQ_API_KEY
         sync: false          # Set manually in Render dashboard
-      - key: OPENAI_MODEL
-        value: gpt-4o
+      - key: GROQ_MODEL
+        value: meta-llama/llama-4-scout-17b-16e-instruct
       - key: LOG_LEVEL
         value: info
     autoDeploy: true
