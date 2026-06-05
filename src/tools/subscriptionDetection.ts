@@ -17,17 +17,10 @@ const SubscriptionDetectionInput = z.object({
     ])
     .describe('Detection type'),
   merchant: z.string().optional().describe('Merchant name for check_merchant'),
-  minOccurrences: z
-    .number()
-    .min(2)
-    .optional()
-    .default(2)
-    .describe('Minimum number of months a merchant must appear in to be flagged'),
-  maxAmountVariance: z
-    .number()
-    .optional()
-    .default(0.15)
-    .describe('Maximum allowed coefficient of variation (StdDev/Mean) for amount; 0.15 = 15%'),
+  minOccurrences: z.coerce.number().min(2).optional().default(2)
+    .describe('Min months a merchant must appear to be flagged as recurring'),
+  maxAmountVariance: z.coerce.number().optional().default(0.15)
+    .describe('Max coefficient of variation for amount (0.15 = 15%)'),
 });
 
 // ---------------------------------------------------------------------------

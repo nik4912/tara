@@ -8,22 +8,20 @@ import { db } from '../db/index';
 // ---------------------------------------------------------------------------
 
 const FundAnalysisInput = z.object({
-  operation: z
-    .enum([
-      'fund_return',     // Period return for one or all funds
-      'fund_ranking',    // Rank all funds by return
-      'nav_history',     // NAV series for a specific fund
-      'period_return',   // Return between two explicit dates
-      'best_fund',       // Best performing fund
-      'worst_fund',      // Worst performing fund
-      'fund_list',       // All funds with latest NAV
-    ])
-    .describe('Analysis type'),
-  fundId: z.string().optional().describe('Fund ID (e.g. fund_001)'),
-  fundName: z.string().optional().describe('Fund name or partial name for lookup'),
-  category: z.string().optional().describe('Filter by fund category: Equity, Debt, Hybrid'),
-  startDate: z.string().optional().describe('Period start date (YYYY-MM-DD)'),
-  endDate: z.string().optional().describe('Period end date (YYYY-MM-DD)'),
+  operation: z.enum([
+    'fund_return',
+    'fund_ranking',
+    'nav_history',
+    'period_return',
+    'best_fund',
+    'worst_fund',
+    'fund_list',
+  ]).describe('Analysis type: fund_return | fund_ranking | nav_history | period_return | best_fund | worst_fund | fund_list'),
+  fundId: z.string().optional().describe('Fund ID e.g. fund_001'),
+  fundName: z.string().optional().describe('Fund name partial match'),
+  category: z.string().optional().describe('Fund category: Equity, Debt, Hybrid'),
+  startDate: z.string().optional().describe('Period start date YYYY-MM-DD'),
+  endDate: z.string().optional().describe('Period end date YYYY-MM-DD'),
 });
 
 // ---------------------------------------------------------------------------
