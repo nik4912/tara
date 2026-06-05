@@ -1,0 +1,7 @@
+[
+  { "id": "hold_001", "fund_id": "fund_001", "units": 150.500, "purchase_date": "2023-06-15", "purchase_nav": 65.20 },
+  { "id": "hold_002", "fund_id": "fund_002", "units": 80.250, "purchase_date": "2023-08-10", "purchase_nav": 128.40 },
+  { "id": "hold_003", "fund_id": "fund_003", "units": 200.000, "purchase_date": "2023-09-20", "purchase_nav": 52.10 },
+  { "id": "hold_004", "fund_id": "fund_004", "units": 5.800, "purchase_date": "2023-11-01", "purchase_nav": 3780.50 },
+  { "id": "hold_005", "fund_id": "fund_005", "units": 120.750, "purchase_date": "2023-07-05", "purchase_nav": 195.30 }
+]

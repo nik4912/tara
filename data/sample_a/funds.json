@@ -1,0 +1,62 @@
+[
+  { "id": "fund_001", "name": "Mirae Asset Large Cap Fund", "category": "Equity" },
+  { "id": "fund_002", "name": "HDFC Mid-Cap Opportunities Fund", "category": "Equity" },
+  { "id": "fund_003", "name": "Axis Bluechip Fund", "category": "Equity" },
+  { "id": "fund_004", "name": "SBI Liquid Fund", "category": "Debt" },
+  { "id": "fund_005", "name": "ICICI Prudential Balanced Advantage Fund", "category": "Hybrid" },
+  {
+    "id": "fund_001",
+    "navHistory": [
+      { "date": "2024-01-01", "nav": 78.50 },
+      { "date": "2024-02-01", "nav": 81.20 },
+      { "date": "2024-03-01", "nav": 83.90 },
+      { "date": "2024-04-01", "nav": 87.30 },
+      { "date": "2024-05-01", "nav": 85.60 },
+      { "date": "2024-06-01", "nav": 89.10 }
+    ]
+  },
+  {
+    "id": "fund_002",
+    "navHistory": [
+      { "date": "2024-01-01", "nav": 142.30 },
+      { "date": "2024-02-01", "nav": 148.70 },
+      { "date": "2024-03-01", "nav": 155.20 },
+      { "date": "2024-04-01", "nav": 161.80 },
+      { "date": "2024-05-01", "nav": 158.40 },
+      { "date": "2024-06-01", "nav": 165.90 }
+    ]
+  },
+  {
+    "id": "fund_003",
+    "navHistory": [
+      { "date": "2024-01-01", "nav": 56.80 },
+      { "date": "2024-02-01", "nav": 58.40 },
+      { "date": "2024-03-01", "nav": 59.90 },
+      { "date": "2024-04-01", "nav": 61.50 },
+      { "date": "2024-05-01", "nav": 60.20 },
+      { "date": "2024-06-01", "nav": 63.70 }
+    ]
+  },
+  {
+    "id": "fund_004",
+    "navHistory": [
+      { "date": "2024-01-01", "nav": 3845.20 },
+      { "date": "2024-02-01", "nav": 3872.60 },
+      { "date": "2024-03-01", "nav": 3901.40 },
+      { "date": "2024-04-01", "nav": 3930.80 },
+      { "date": "2024-05-01", "nav": 3960.50 },
+      { "date": "2024-06-01", "nav": 3991.20 }
+    ]
+  },
+  {
+    "id": "fund_005",
+    "navHistory": [
+      { "date": "2024-01-01", "nav": 212.40 },
+      { "date": "2024-02-01", "nav": 218.70 },
+      { "date": "2024-03-01", "nav": 224.30 },
+      { "date": "2024-04-01", "nav": 231.60 },
+      { "date": "2024-05-01", "nav": 228.90 },
+      { "date": "2024-06-01", "nav": 237.50 }
+    ]
+  }
+]

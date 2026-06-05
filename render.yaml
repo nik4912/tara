@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: tara-finance-agent
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false          # Set manually in Render dashboard from Neon
+      - key: OPENAI_API_KEY
+        sync: false          # Set manually in Render dashboard
+      - key: OPENAI_MODEL
+        value: gpt-4o
+      - key: LOG_LEVEL
+        value: info
+    autoDeploy: true

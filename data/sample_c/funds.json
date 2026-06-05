@@ -1,0 +1,47 @@
+[
+  { "id": "fund_001", "name": "Mirae Asset Large Cap Fund", "category": "Equity" },
+  { "id": "fund_002", "name": "HDFC Mid-Cap Opportunities Fund", "category": "Equity" },
+  { "id": "fund_003", "name": "Axis Bluechip Fund", "category": "Equity" },
+  { "id": "fund_004", "name": "SBI Liquid Fund", "category": "Debt" },
+  { "id": "fund_005", "name": "ICICI Prudential Balanced Advantage Fund", "category": "Hybrid" },
+  {
+    "id": "fund_001",
+    "navHistory": [
+      { "date": "2024-07-01", "nav": 92.40 },
+      { "date": "2024-08-01", "nav": 95.80 },
+      { "date": "2024-09-01", "nav": 98.30 }
+    ]
+  },
+  {
+    "id": "fund_002",
+    "navHistory": [
+      { "date": "2024-07-01", "nav": 172.30 },
+      { "date": "2024-08-01", "nav": 179.60 },
+      { "date": "2024-09-01", "nav": 185.40 }
+    ]
+  },
+  {
+    "id": "fund_003",
+    "navHistory": [
+      { "date": "2024-07-01", "nav": 66.10 },
+      { "date": "2024-08-01", "nav": 68.90 },
+      { "date": "2024-09-01", "nav": 71.20 }
+    ]
+  },
+  {
+    "id": "fund_004",
+    "navHistory": [
+      { "date": "2024-07-01", "nav": 4022.40 },
+      { "date": "2024-08-01", "nav": 4054.80 },
+      { "date": "2024-09-01", "nav": 4087.60 }
+    ]
+  },
+  {
+    "id": "fund_005",
+    "navHistory": [
+      { "date": "2024-07-01", "nav": 244.80 },
+      { "date": "2024-08-01", "nav": 251.30 },
+      { "date": "2024-09-01", "nav": 258.70 }
+    ]
+  }
+]
