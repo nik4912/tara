@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/index.ts",
+    "start": "node dist/src/index.js",
     "dev": "ts-node src/index.ts",
     "ingest": "ts-node scripts/ingest.ts",
     "eval": "ts-node src/eval/run-evals.ts",
